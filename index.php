@@ -32,7 +32,7 @@ if (isset($_POST['delete'])) {
 
 <?php include('includes/navbar.php'); ?>
 
-<div class="container user-info rounded shadow p-3 my-2">
+<div class="container-fluid user-info rounded shadow p-3 my-2">
 <h2 class="text-center mb-2">User Table</h2>
   <div class="table-responsive text-center">
     <table class="table table-bordered">
@@ -71,8 +71,13 @@ if (isset($_POST['delete'])) {
           <td><?php echo $row['user_name'];?> </td>
           <td><?php echo $row['address'];?> </td>
           <td>
-          <a href="#" class="btn btn-primary btn-sm">Edit</a>
         <!-- Delete button -->
+        <form action="update.php" method="POST" class="display: inline;">
+            <input type="hidden" name="id" value="<?php echo $row['user_id']; ?>">
+            <button type="submit" name="edit" class="btn btn-primary btn-sm" value="Update" onclick="return confirm('Are you sure you want to edit this user?')">
+            <i class="fas fa-edit"></i>
+        </button>
+        </form>
         <form method="POST" style="display: inline;">
             <input type="hidden" name="id" value="<?php echo $row['user_id']; ?>">
             <button type="submit" name="delete" class="btn btn-danger btn-sm" value="Delete" onclick="return confirm('Are you sure you want to delete this user?')">

@@ -32,8 +32,7 @@ class database {
         } else {
             return $con->prepare("INSERT INTO users (user_firstname, user_lastname, user_birthday, user_sex,  user_name, user_pass) VALUES(?,?,?,?,?,?)")->execute([$firstname, $lastname, $birthday, $sex, $username, $password]);
         }
-
-        
+  
     }
     function check($username, $password) {
         // Open database connection
@@ -80,5 +79,49 @@ class database {
         $con->rollBack();
         return false;
     }  
+}
+
+function viewdata($id){
+    try {
+        $con = $this->opencon();
+        $query = $con->prepare("SELECT users.user_id, users.user_firstname, users.user_lastname, users.user_birthday, users.user_sex, users.user_name, users.user_profile_picture, user_address.street, user_address.barangay, user_address.city, user_address.province from users INNER JOIN user_address ON users.user_id = user_address.user_id WHERE users.user_id = ?");
+        $query->execute([$id]);
+        return $query->fetch();
+    } catch (PDOException $e) {
+        //Handles exception such as (log error, return empty array, etc,)
+        return [];
+    }
+}
+
+function updateUser($user_id, $firstname, $lastname, $birthday, $sex) {
+    try {
+        $con = $this->opencon();
+        $con->beginTransaction();
+        $query = $con->prepare("UPDATE users SET user_firstname=?, user_lastname=?, user_birthday=?, user_sex=? WHERE user_id=?");
+        $query->execute([$firstname, $lastname, $birthday, $sex, $user_id]);
+        //update successful
+        $con->commit();
+        return true;
+    } catch (PDOException $e) {
+        //Handle exceptions such as (log error, return false)
+        $con->rollback();
+        return false;
+    }
+}
+
+function updateUserAddress($street, $barangay, $city, $province, $user_id) {
+    try {
+        $con = $this->opencon();
+        $con->beginTransaction();
+        $query = $con->prepare("UPDATE user_address SET user_address.street=?, user_address.barangay=?, user_address.city=?, user_address.province=? WHERE user_id=?");
+        $query->execute([$street, $barangay, $city, $province, $user_id]);
+        //update successful
+        $con->commit();
+        return true;
+    } catch (PDOException $e) {
+        //Handle exceptions such as (log error, return false)
+        $con->rollback();
+        return false;
+    }
 }
 }
