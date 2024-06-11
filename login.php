@@ -6,6 +6,15 @@ session_start();
 
 $error = ""; // Initialize error variable
 
+if (isset($_SESSION['username']) && isset($_SESSION['account_type'])) {
+  if ($_SESSION['account_type'] == 0) {
+    header ('location:index.php?status=login');
+  } else if ($_SESSION['account_type'] == 1) {
+    header('location:user_account.php');
+  }
+  exit();
+}
+
 if (isset($_POST['login'])) {
   $username = $_POST['user'];
   $password = $_POST['pass'];
